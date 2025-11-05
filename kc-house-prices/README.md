@@ -9,6 +9,20 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+## Preparing the Dataset
+
+Copy the provided CSV into the repository's `data/` directory so the training
+pipeline can find it. You can either move the file manually or run the helper
+script:
+
+```bash
+python scripts/prepare_data.py --source /path/to/kc_house_dataset.csv
+```
+
+The script copies the dataset to `data/kc_house_data.csv` by default. Pass
+`--destination` or `--force` if you need to customize the target location or
+overwrite an existing file.
+
 ## Running the Pipeline
 
 ```bash
