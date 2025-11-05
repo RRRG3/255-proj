@@ -1,0 +1,7 @@
+.venv/
+data/
+!data/
+data/*
+!data/README.md
+.ipynb_checkpoints/
+*.env
