@@ -1,0 +1,3 @@
+model,best_params,R2_CV,RMSE_CV
+RandomForest,"{'model__max_depth': 20, 'model__min_samples_leaf': 1, 'model__n_estimators': 500}",0.861991493279848,134278.14449499844
+LinearRegression,{},0.7306580664192894,187587.71347744836

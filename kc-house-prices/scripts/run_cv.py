@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from sklearn.model_selection import KFold, GridSearchCV, cross_val_predict, train_test_split
-from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.metrics import r2_score, root_mean_squared_error
 
 from houseprice.config import DATA_PATH, OUT_DIR, RANDOM_STATE, N_FOLDS, TEST_SIZE
 from houseprice.data import load_data
@@ -14,7 +14,7 @@ from houseprice.models import make_linear, make_random_forest, make_xgb
 from houseprice.plots import plot_lr_residuals, plot_tree_importance
 
 def rmse(y_true, y_pred):
-    return mean_squared_error(y_true, y_pred, squared=False)
+    return root_mean_squared_error(y_true, y_pred)
 
 def main(data_path: Path, out_dir: Path):
     out_dir.mkdir(parents=True, exist_ok=True)
