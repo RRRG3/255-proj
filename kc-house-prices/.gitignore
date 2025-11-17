@@ -1,7 +1,14 @@
-.venv/
-data/
-!data/
-data/*
-!data/README.md
+# Ignore virtual environments
+.dmvenv/
+venv/
+
+# Byte-compiled / cache files
+__pycache__/
+*.pyc
+
+# Jupyter notebook checkpoints
 .ipynb_checkpoints/
-*.env
+
+# System files
+.DS_Store
+
