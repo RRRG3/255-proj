@@ -267,24 +267,3 @@ All 19 tests passing ✅
 
 **Time Period**: May 2014 - May 2015
 
-## 👥 Authors
-
-- Your Name
-- Course: CMPE 255 - Data Mining
-- Institution: San Jose State University
-- Semester: Fall 2024
-
-## 📄 License
-
-This project is for educational purposes as part of CMPE 255 coursework.
-
-## 🙏 Acknowledgments
-
-- King County Department of Assessments for the dataset
-- Kaggle for hosting the dataset
-- scikit-learn community for excellent ML tools
-- Course instructors and TAs for guidance
-
----
-
-**Note**: This project demonstrates end-to-end data mining workflow including EDA, feature engineering, model training, evaluation, and interpretation. All code is modular, tested, and reproducible.
