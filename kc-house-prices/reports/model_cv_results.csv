@@ -1,3 +1,4 @@
-model,best_params,R2_CV,RMSE_CV
-RandomForest,"{'model__max_depth': 20, 'model__min_samples_leaf': 1, 'model__n_estimators': 500}",0.861991493279848,134278.14449499844
-LinearRegression,{},0.7306580664192894,187587.71347744836
+model,best_params,R2_CV_mean,R2_CV_std,RMSE_CV
+XGBoost,"{'model__learning_rate': 0.05, 'model__max_depth': 6, 'model__n_estimators': 300}",0.9049557783273909,0.00315266403587507,120311.94989414312
+RandomForest,"{'model__max_depth': 20, 'model__min_samples_leaf': 1, 'model__n_estimators': 100}",0.8861169803979685,0.0035539220443608303,133642.23902057082
+LinearRegression,{},0.7800531347236048,0.007168339187579313,177014.0673297034
