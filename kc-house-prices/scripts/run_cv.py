@@ -124,6 +124,18 @@ def main(data_path: Path, out_dir: Path):
 
     cv_df = pd.DataFrame(results).sort_values("RMSE_CV")
     
+    # Save raw fold scores for statistical testing
+    fold_data = []
+    for _, row in cv_df.iterrows():
+        for i, score in enumerate(row["fold_scores"]):
+            fold_data.append({
+                "model": row["model"],
+                "fold": i,
+                "r2": score
+            })
+    pd.DataFrame(fold_data).to_csv(out_dir / "model_cv_folds.csv", index=False)
+    print(f"Saved CV folds → {out_dir / 'model_cv_folds.csv'}")
+
     # Save CSV (without fold_scores for cleaner output)
     cv_df_export = cv_df.drop(columns=["fold_scores"]).copy()
     cv_path = out_dir / "model_cv_results.csv"

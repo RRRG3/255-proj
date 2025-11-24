@@ -100,6 +100,9 @@ python scripts/run_cv.py
 
 # Run tests
 pytest tests/ -v
+
+# Run statistical significance test
+python scripts/test_significance.py
 ```
 
 #### Option C: Docker (Easiest)
