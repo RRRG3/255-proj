@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
 
 def split_columns(X: pd.DataFrame) -> Tuple[List[str], List[str]]:
     numeric = X.select_dtypes(include=[np.number]).columns.tolist()
@@ -10,16 +12,31 @@ def split_columns(X: pd.DataFrame) -> Tuple[List[str], List[str]]:
     return numeric, categorical
 
 def make_preprocessors(numeric, categorical):
-    # For Linear Regression: scale numeric
+    # Numeric pipeline: Impute median -> (Scale for LR / nothing for Trees)
+    # Categorical pipeline: Impute mode -> OneHot
+    
+    # Linear Regression Preprocessor
     prep_lr = ColumnTransformer([
-        ("num", StandardScaler(), numeric),
-        ("cat", OneHotEncoder(handle_unknown="ignore"), categorical),
+        ("num", Pipeline([
+            ("imputer", SimpleImputer(strategy="median")),
+            ("scaler", StandardScaler())
+        ]), numeric),
+        ("cat", Pipeline([
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("encoder", OneHotEncoder(handle_unknown="ignore"))
+        ]), categorical),
     ], remainder="drop")
 
-    # For trees: passthrough numeric
+    # Tree Models Preprocessor (No Scaling)
     prep_trees = ColumnTransformer([
-        ("num", "passthrough", numeric),
-        ("cat", OneHotEncoder(handle_unknown="ignore"), categorical),
+        ("num", Pipeline([
+            ("imputer", SimpleImputer(strategy="median")),
+            # No scaler needed for trees
+        ]), numeric),
+        ("cat", Pipeline([
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("encoder", OneHotEncoder(handle_unknown="ignore"))
+        ]), categorical),
     ], remainder="drop")
 
     return prep_lr, prep_trees

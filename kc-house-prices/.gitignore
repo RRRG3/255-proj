@@ -5,3 +5,5 @@ data/*
 !data/README.md
 .ipynb_checkpoints/
 *.env
+__pycache__/
+*.egg-info/

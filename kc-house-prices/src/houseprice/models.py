@@ -9,23 +9,28 @@ def make_random_forest(prep, random_state=42):
     pipe = Pipeline([("prep", prep),
                      ("model", RandomForestRegressor(random_state=random_state, n_jobs=-1))])
     grid = {
-        "model__n_estimators": [200, 500],
-        "model__max_depth": [None, 10, 20],
-        "model__min_samples_leaf": [1, 3, 5],
+        "model__n_estimators": [100],
+        "model__max_depth": [10, 20],
+        "model__min_samples_leaf": [1, 2],
     }
     return pipe, grid
 
 def make_xgb(prep, random_state=42):
     try:
         from xgboost import XGBRegressor
-    except Exception:
+    except ImportError:
         return None, None  # xgboost not installed
+        
     pipe = Pipeline([("prep", prep),
                      ("model", XGBRegressor(
-                         n_estimators=600, learning_rate=0.05,
-                         subsample=0.8, colsample_bytree=0.8,
                          objective="reg:squarederror", n_jobs=-1,
                          random_state=random_state
                      ))])
-    grid = {"model__max_depth": [4, 6, 8]}
+    
+    # Reduced grid search for XGBoost (faster demonstration)
+    grid = {
+        "model__n_estimators": [100, 300],
+        "model__max_depth": [3, 6],
+        "model__learning_rate": [0.05, 0.1],
+    }
     return pipe, grid
