@@ -1,5 +1,3 @@
-"""Exploratory Data Analysis visualization functions."""
-
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -8,15 +6,6 @@ import seaborn as sns
 
 
 def plot_price_distribution(df: pd.DataFrame, outpath: Path) -> None:
-    """Generate histogram of raw price distribution with statistics overlay.
-    
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame containing 'price' column
-    outpath : Path
-        Output path for the PNG file
-    """
     if "price" not in df.columns:
         raise ValueError("DataFrame must contain 'price' column")
     
@@ -43,15 +32,6 @@ def plot_price_distribution(df: pd.DataFrame, outpath: Path) -> None:
 
 
 def plot_log_price_distribution(df: pd.DataFrame, outpath: Path) -> None:
-    """Generate histogram of log-transformed price showing normalization.
-    
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame containing 'price' column
-    outpath : Path
-        Output path for the PNG file
-    """
     if "price" not in df.columns:
         raise ValueError("DataFrame must contain 'price' column")
     
@@ -79,17 +59,6 @@ def plot_log_price_distribution(df: pd.DataFrame, outpath: Path) -> None:
 
 
 def plot_correlation_heatmap(df: pd.DataFrame, outpath: Path, top_n: int = 15) -> None:
-    """Generate correlation heatmap for top N numerical features vs price.
-    
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame with numerical features and 'price' column
-    outpath : Path
-        Output path for the PNG file
-    top_n : int, default=15
-        Number of top correlated features to display
-    """
     if "price" not in df.columns:
         raise ValueError("DataFrame must contain 'price' column")
     

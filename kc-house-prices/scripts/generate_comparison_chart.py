@@ -1,19 +1,9 @@
-"""Generate model comparison bar chart from CV results."""
 
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
 def generate_comparison_chart(csv_path: Path, output_path: Path):
-    """Generate bar chart comparing model performance.
-    
-    Parameters
-    ----------
-    csv_path : Path
-        Path to model_cv_results.csv
-    output_path : Path
-        Path to save the comparison chart
-    """
     # Load results
     df = pd.read_csv(csv_path)
     

@@ -1,4 +1,3 @@
-"""Tests for EDA visualization functions."""
 
 import pytest
 import numpy as np

@@ -1,4 +1,3 @@
-"""Utility to copy the provided dataset into the expected location."""
 
 from __future__ import annotations
 
@@ -13,19 +12,6 @@ except ModuleNotFoundError:
 
 
 def copy_dataset(source: Path, destination: Path, overwrite: bool = False) -> Path:
-    """Copy the dataset to the project data directory.
-
-    Parameters
-    ----------
-    source
-        Path to the dataset provided by the user.
-    destination
-        Target path inside the repository where the pipeline expects the data.
-    overwrite
-        If ``True`` and ``destination`` already exists, replace it. Otherwise a
-        ``FileExistsError`` is raised to prevent accidental overwrites.
-    """
-
     if not source.exists():
         raise FileNotFoundError(f"Source dataset not found: {source}")
 

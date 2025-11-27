@@ -6,7 +6,6 @@ import shap
 from sklearn.compose import ColumnTransformer
 
 def plot_lr_residuals(model, X_test, y_test_log, outpath: Path):
-    """Original residual plot for backward compatibility."""
     y_pred_log = model.predict(X_test)
     y_true = np.expm1(y_test_log)
     y_pred = np.expm1(y_pred_log)
@@ -23,19 +22,6 @@ def plot_lr_residuals(model, X_test, y_test_log, outpath: Path):
 
 
 def plot_lr_residuals_enhanced(model, X_test, y_test_log, outpath: Path):
-    """Enhanced residual plot with error distribution and pattern annotations.
-    
-    Parameters
-    ----------
-    model : sklearn Pipeline
-        Trained linear regression pipeline
-    X_test : pd.DataFrame
-        Test features
-    y_test_log : np.ndarray
-        Log-transformed test target values
-    outpath : Path
-        Output path for the PNG file
-    """
     y_pred_log = model.predict(X_test)
     y_true = np.expm1(y_test_log)
     y_pred = np.expm1(y_pred_log)
@@ -107,21 +93,6 @@ def plot_tree_importance(tree_pipe, outpath: Path, top_k: int = 20):
 
 
 def plot_feature_importance_comparison(rf_model, xgb_model, prep, outpath: Path, top_k: int = 15):
-    """Side-by-side bar chart comparing RF and XGBoost feature importance.
-    
-    Parameters
-    ----------
-    rf_model : sklearn Pipeline
-        Trained Random Forest pipeline
-    xgb_model : sklearn Pipeline
-        Trained XGBoost pipeline
-    prep : ColumnTransformer
-        Preprocessor to extract feature names
-    outpath : Path
-        Output path for the PNG file
-    top_k : int, default=15
-        Number of top features to display
-    """
     names = _feature_names(prep)
     
     # Extract importances
@@ -185,19 +156,6 @@ def plot_shap_summary(model, X_train, outpath: Path):
 
 
 def plot_linear_coefficients(lr_model, prep, outpath: Path, top_k: int = 15):
-    """Bar chart of top linear regression coefficients by absolute value.
-    
-    Parameters
-    ----------
-    lr_model : sklearn Pipeline
-        Trained Linear Regression pipeline
-    prep : ColumnTransformer
-        Preprocessor to extract feature names
-    outpath : Path
-        Output path for the PNG file
-    top_k : int, default=15
-        Number of top coefficients to display
-    """
     names = _feature_names(prep)
     coefficients = lr_model.named_steps["model"].coef_
     
