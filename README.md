@@ -2,7 +2,7 @@
 
 A comprehensive data mining project comparing Linear Regression, Random Forest, and XGBoost models for predicting house prices in King County, Washington.
 
-## 📊 Project Overview
+##  Project Overview
 
 This project analyzes the King County House Sales dataset to predict house prices using machine learning techniques. We compare three different modeling approaches and provide in-depth analysis of their performance, feature importance, and predictive capabilities.
 
@@ -14,7 +14,7 @@ This project analyzes the King County House Sales dataset to predict house price
 - **Key Features**: Living area (sqft_living), grade, location (lat/long), and house age, plus engineered interaction features.
 - **Model Insights**: SHAP analysis reveals complex feature interactions driving predictions.
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 kc-house-prices/
