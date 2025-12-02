@@ -1,0 +1,3 @@
+strategy,r2_cv,rmse_cv,r2_test,rmse_test,best_params
+baseline,0.8923580366630454,120311.94989414312,0.8995017364713737,116873.87838876498,"{'model__learning_rate': 0.05, 'model__max_depth': 6, 'model__n_estimators': 300}"
+hyperparams_fast,0.8909732900865143,121083.34595702981,0.8986409577593187,117373.3300342015,"{'model__colsample_bytree': 0.8, 'model__gamma': 0.1, 'model__learning_rate': 0.05, 'model__max_depth': 6, 'model__min_child_weight': 3, 'model__n_estimators': 300, 'model__subsample': 0.8}"

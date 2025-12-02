@@ -87,15 +87,7 @@ def plot_correlation_heatmap(df: pd.DataFrame, outpath: Path, top_n: int = 15) -
 
 
 def plot_sqft_vs_price(df: pd.DataFrame, outpath: Path) -> None:
-    """Scatter plot of sqft_living vs price, colored by grade.
-    
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame containing 'sqft_living', 'price', and optionally 'grade' columns
-    outpath : Path
-        Output path for the PNG file
-    """
+    """Scatter plot of sqft_living vs price, colored by grade."""
     required_cols = ["sqft_living", "price"]
     missing = [col for col in required_cols if col not in df.columns]
     if missing:
@@ -130,15 +122,7 @@ def plot_sqft_vs_price(df: pd.DataFrame, outpath: Path) -> None:
 
 
 def plot_geographic_distribution(df: pd.DataFrame, outpath: Path) -> None:
-    """Geographic scatter plot (lat/long) with price as color intensity.
-    
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame containing 'lat', 'long', and 'price' columns
-    outpath : Path
-        Output path for the PNG file
-    """
+    """Geographic scatter plot (lat/long) with price as color intensity."""
     required_cols = ["lat", "long", "price"]
     missing = [col for col in required_cols if col not in df.columns]
     if missing:

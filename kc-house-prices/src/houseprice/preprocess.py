@@ -12,8 +12,8 @@ def split_columns(X: pd.DataFrame) -> Tuple[List[str], List[str]]:
     return numeric, categorical
 
 def make_preprocessors(numeric, categorical):
-    # Numeric pipeline: Impute median -> (Scale for LR / nothing for Trees)
-    # Categorical pipeline: Impute mode -> OneHot
+    # Numeric pipeline: Impute median (Scale for LR / nothing for Trees)
+    # Categorical pipeline: Impute mode  OneHot
     
     # Linear Regression Preprocessor
     prep_lr = ColumnTransformer([
