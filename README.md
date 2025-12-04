@@ -2,7 +2,7 @@
 
 A comprehensive data mining project comparing Linear Regression, Random Forest, and XGBoost models for predicting house prices in King County, Washington.
 
-## 📊 Project Overview
+##  Project Overview
 
 This project analyzes the King County House Sales dataset to predict house prices using machine learning techniques. We compare three different modeling approaches and provide in-depth analysis of their performance, feature importance, and predictive capabilities.
 
@@ -14,7 +14,7 @@ This project analyzes the King County House Sales dataset to predict house price
 - **Key Features**: Living area (sqft_living), grade, location (lat/long), and house age, plus engineered interaction features.
 - **Model Insights**: SHAP analysis reveals complex feature interactions driving predictions.
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 kc-house-prices/
@@ -50,7 +50,7 @@ kc-house-prices/
 └── README.md                # This file
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Environment Setup
 
@@ -119,7 +119,7 @@ docker build -t kc-house-prices .
 docker run --rm -v "$(pwd)/reports:/app/reports" kc-house-prices
 ```
 
-## 📈 Results
+##  Results
 
 ### Model Comparison
 
@@ -143,7 +143,7 @@ docker run --rm -v "$(pwd)/reports:/app/reports" kc-house-prices
 
 4. **Linear Regression Limitations**: Residual analysis reveals systematic under-prediction of expensive homes, indicating the model cannot capture complex pricing patterns.
 
-## 📊 Generated Outputs
+## Generated Outputs
 
 ### Exploratory Data Analysis (EDA)
 - `eda_price_dist.png` - Distribution of raw house prices
@@ -165,7 +165,7 @@ docker run --rm -v "$(pwd)/reports:/app/reports" kc-house-prices
 - `comparison_table.txt` - Formatted model comparison table
 - `test_metrics.txt` - Final test set performance
 
-## 🔬 Methodology
+##  Methodology
 
 ### Data Preprocessing
 
@@ -202,7 +202,7 @@ docker run --rm -v "$(pwd)/reports:/app/reports" kc-house-prices
 2. **Random Forest**: Ensemble of 500 decision trees with max_depth=20
 3. **XGBoost**: (Optional) Gradient boosting with optimized hyperparameters
 
-## 🧪 Testing
+##  Testing
 
 Run the test suite to verify all functionality:
 
@@ -215,9 +215,9 @@ pytest tests/ -v
 - Enhanced plotting functions (4 tests)
 - CV statistics and formatting (5 tests)
 
-All 19 tests passing ✅
+All 19 tests passing 
 
-## 📦 Dependencies
+##  Dependencies
 
 - Python 3.9+
 - pandas >= 2.2.2
@@ -230,7 +230,7 @@ All 19 tests passing ✅
 - pytest >= 7.4.0
 - shap
 
-## 🎯 Future Enhancements
+## Future Enhancements
 
 1.  **Model Improvements**:
     - [x] ~~Implement XGBoost for comparison~~
@@ -252,7 +252,7 @@ All 19 tests passing ✅
     - [ ] Create a REST API for predictions using FastAPI
     - [ ] Build a simple web interface with Streamlit or Gradio
 
-## 📝 Dataset Information
+##  Dataset Information
 
 **Source**: [Kaggle - House Sales in King County, USA](https://www.kaggle.com/datasets/harlfoxem/housesalesprediction)
 
