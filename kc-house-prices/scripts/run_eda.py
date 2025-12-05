@@ -1,5 +1,3 @@
-"""Generate all EDA visualizations for the King County house price dataset."""
-
 import argparse
 from pathlib import Path
 
@@ -15,15 +13,6 @@ from houseprice.eda import (
 
 
 def main(data_path: Path, out_dir: Path):
-    """Generate all EDA plots.
-    
-    Parameters
-    ----------
-    data_path : Path
-        Path to the input CSV file
-    out_dir : Path
-        Directory to save output plots
-    """
     out_dir.mkdir(parents=True, exist_ok=True)
     
     print(f"Loading data from {data_path}...")

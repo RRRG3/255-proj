@@ -1,4 +1,3 @@
-"""Tests for CV statistics and table formatting."""
 
 import pytest
 import numpy as np
@@ -13,7 +12,6 @@ from run_cv import format_comparison_table
 
 
 def test_format_comparison_table():
-    """Test formatted table generation."""
     df = pd.DataFrame({
         'model': ['LinearRegression', 'RandomForest', 'XGBoost'],
         'R2_CV_mean': [0.6234, 0.8567, 0.8789],
