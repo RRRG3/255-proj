@@ -1,10 +1,14 @@
 # Ignore virtual environments
 .dmvenv/
 venv/
+.venv/
+.venv312/
 
 # Byte-compiled / cache files
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
 # Jupyter notebook checkpoints
 .ipynb_checkpoints/
@@ -12,6 +16,12 @@ __pycache__/
 # System files
 .DS_Store
 
+# Environment files
 *.env
+
+# Build artifacts
 __pycache__/
 *.egg-info/
+.pytest_cache/
+build/
+dist/
