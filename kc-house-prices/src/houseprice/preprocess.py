@@ -7,15 +7,15 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 
 def split_columns(X: pd.DataFrame) -> Tuple[List[str], List[str]]:
+    """Split into numeric and categorical columns"""
     numeric = X.select_dtypes(include=[np.number]).columns.tolist()
     categorical = X.select_dtypes(include=["object", "category"]).columns.tolist()
     return numeric, categorical
 
 def make_preprocessors(numeric, categorical):
-    # Numeric pipeline: Impute median (Scale for LR / nothing for Trees)
-    # Categorical pipeline: Impute mode  OneHot
+    """Create preprocessing pipelines for linear and tree models"""
     
-    # Linear Regression Preprocessor
+    # for linear regression - need to scale
     prep_lr = ColumnTransformer([
         ("num", Pipeline([
             ("imputer", SimpleImputer(strategy="median")),
@@ -27,11 +27,10 @@ def make_preprocessors(numeric, categorical):
         ]), categorical),
     ], remainder="drop")
 
-    # Tree Models Preprocessor (No Scaling)
+    # for trees - no scaling needed
     prep_trees = ColumnTransformer([
         ("num", Pipeline([
             ("imputer", SimpleImputer(strategy="median")),
-            # No scaler needed for trees
         ]), numeric),
         ("cat", Pipeline([
             ("imputer", SimpleImputer(strategy="most_frequent")),

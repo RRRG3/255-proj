@@ -6,10 +6,12 @@ import shap
 from sklearn.compose import ColumnTransformer
 
 def plot_lr_residuals(model, X_test, y_test_log, outpath: Path):
+    """Simple residual plot for linear regression"""
     y_pred_log = model.predict(X_test)
     y_true = np.expm1(y_test_log)
     y_pred = np.expm1(y_pred_log)
     residuals = y_true - y_pred
+    
     plt.figure()
     plt.scatter(y_pred, residuals, alpha=0.4)
     plt.axhline(0, linestyle="--")
@@ -22,6 +24,7 @@ def plot_lr_residuals(model, X_test, y_test_log, outpath: Path):
 
 
 def plot_lr_residuals_enhanced(model, X_test, y_test_log, outpath: Path):
+    """Fancier residual plot with histogram"""
     y_pred_log = model.predict(X_test)
     y_true = np.expm1(y_test_log)
     y_pred = np.expm1(y_pred_log)
@@ -29,7 +32,7 @@ def plot_lr_residuals_enhanced(model, X_test, y_test_log, outpath: Path):
     
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
     
-    # Residual scatter plot with color coding
+    # scatter with color coding
     colors = ['red' if r < 0 else 'blue' for r in residuals]
     ax1.scatter(y_pred, residuals, alpha=0.4, c=colors, s=10)
     ax1.axhline(0, linestyle="--", color='black', linewidth=2)
@@ -37,20 +40,18 @@ def plot_lr_residuals_enhanced(model, X_test, y_test_log, outpath: Path):
     ax1.set_ylabel("Residual ($ actual - $ predicted)")
     ax1.set_title("Linear Regression Residuals")
     
-    # Add annotations for patterns
     ax1.text(0.05, 0.95, 'Over-prediction (blue)', transform=ax1.transAxes,
              verticalalignment='top', color='blue', fontsize=9)
     ax1.text(0.05, 0.90, 'Under-prediction (red)', transform=ax1.transAxes,
              verticalalignment='top', color='red', fontsize=9)
     
-    # Residual distribution histogram
+    # histogram of residuals
     ax2.hist(residuals, bins=50, edgecolor='black', alpha=0.7)
     ax2.axvline(0, linestyle="--", color='red', linewidth=2)
     ax2.set_xlabel("Residual ($)")
     ax2.set_ylabel("Frequency")
     ax2.set_title("Distribution of Residuals")
     
-    # Add statistics
     mean_res = residuals.mean()
     std_res = residuals.std()
     ax2.text(0.05, 0.95, f'Mean: ${mean_res:,.0f}\nStd: ${std_res:,.0f}',
@@ -62,6 +63,7 @@ def plot_lr_residuals_enhanced(model, X_test, y_test_log, outpath: Path):
     plt.close()
 
 def _feature_names(ct: ColumnTransformer):
+    """Extract feature names from column transformer"""
     names = []
     for name, trans, cols in ct.transformers:
         if name == "remainder":
@@ -76,13 +78,16 @@ def _feature_names(ct: ColumnTransformer):
     return names
 
 def plot_tree_importance(tree_pipe, outpath: Path, top_k: int = 20):
+    """Plot feature importances from tree model"""
     prep = tree_pipe.named_steps["prep"]
     model = tree_pipe.named_steps["model"]
     if not hasattr(model, "feature_importances_"):
         return
+    
     names = _feature_names(prep)
     importances = pd.Series(model.feature_importances_, index=names)
     top = importances.sort_values(ascending=False).head(top_k)[::-1]
+    
     plt.figure()
     plt.barh(top.index, top.values)
     plt.xlabel("Importance")
@@ -93,25 +98,24 @@ def plot_tree_importance(tree_pipe, outpath: Path, top_k: int = 20):
 
 
 def plot_feature_importance_comparison(rf_model, xgb_model, prep, outpath: Path, top_k: int = 15):
+    """Side-by-side comparison of RF vs XGBoost feature importance"""
     names = _feature_names(prep)
     
-    # Extract importances
     rf_imp = pd.Series(rf_model.named_steps["model"].feature_importances_, index=names)
     xgb_imp = pd.Series(xgb_model.named_steps["model"].feature_importances_, index=names)
     
-    # Get top features from both models (union)
+    # get top features from both (union)
     top_rf = set(rf_imp.nlargest(top_k).index)
     top_xgb = set(xgb_imp.nlargest(top_k).index)
     top_features = list(top_rf | top_xgb)
     
-    # Sort by average importance
+    # sort by average importance
     avg_imp = (rf_imp[top_features] + xgb_imp[top_features]) / 2
     top_features = avg_imp.sort_values(ascending=True).index.tolist()
     
-    # Create comparison plot
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 8))
     
-    # Random Forest
+    # RF
     rf_top = rf_imp[top_features]
     ax1.barh(range(len(rf_top)), rf_top.values, color='steelblue')
     ax1.set_yticks(range(len(rf_top)))
@@ -133,20 +137,17 @@ def plot_feature_importance_comparison(rf_model, xgb_model, prep, outpath: Path,
 
 
 def plot_shap_summary(model, X_train, outpath: Path):
-    """Generate and save a SHAP summary plot for a tree-based model."""
+    """SHAP summary plot for tree model"""
     prep = model.named_steps["prep"]
     tree_model = model.named_steps["model"]
     
-    # Transform the training data
     X_train_transformed = prep.transform(X_train)
     feature_names = _feature_names(prep)
     X_train_transformed_df = pd.DataFrame(X_train_transformed, columns=feature_names)
 
-    # Create SHAP explainer
     explainer = shap.TreeExplainer(tree_model)
     shap_values = explainer.shap_values(X_train_transformed_df)
 
-    # Generate plot
     plt.figure()
     shap.summary_plot(shap_values, X_train_transformed_df, show=False)
     plt.title("SHAP Summary Plot")
@@ -156,16 +157,16 @@ def plot_shap_summary(model, X_train, outpath: Path):
 
 
 def plot_linear_coefficients(lr_model, prep, outpath: Path, top_k: int = 15):
+    """Plot linear regression coefficients"""
     names = _feature_names(prep)
     coefficients = lr_model.named_steps["model"].coef_
     
     coef_series = pd.Series(coefficients, index=names)
     
-    # Get top by absolute value
+    # get top by absolute value
     top_coefs = coef_series.abs().nlargest(top_k)
     top_features = top_coefs.index
     
-    # Get actual values (with sign)
     plot_coefs = coef_series[top_features].sort_values()
     
     fig, ax = plt.subplots(figsize=(10, 8))

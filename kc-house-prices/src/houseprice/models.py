@@ -3,9 +3,11 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 
 def make_linear(prep):
+    """Simple linear regression pipeline"""
     return Pipeline([("prep", prep), ("model", LinearRegression())]), {}
 
 def make_random_forest(prep, random_state=42):
+    """Random forest with basic grid search"""
     pipe = Pipeline([("prep", prep),
                      ("model", RandomForestRegressor(random_state=random_state, n_jobs=-1))])
     grid = {
@@ -16,10 +18,11 @@ def make_random_forest(prep, random_state=42):
     return pipe, grid
 
 def make_xgb(prep, random_state=42):
+    """XGBoost with small grid (faster)"""
     try:
         from xgboost import XGBRegressor
     except ImportError:
-        return None, None  # xgboost not installed
+        return None, None
         
     pipe = Pipeline([("prep", prep),
                      ("model", XGBRegressor(
@@ -27,7 +30,6 @@ def make_xgb(prep, random_state=42):
                          random_state=random_state
                      ))])
     
-    # Reduced grid search for XGBoost (faster demonstration)
     grid = {
         "model__n_estimators": [100, 300],
         "model__max_depth": [3, 6],
@@ -37,12 +39,11 @@ def make_xgb(prep, random_state=42):
 
 
 def make_xgb_optimized(prep, random_state=42, search_mode="full"):
-    """
-    Create XGBoost pipeline with expanded hyperparameter grid."""
+    """XGBoost with bigger hyperparameter grid for optimization experiments"""
     try:
         from xgboost import XGBRegressor
     except ImportError:
-        return None, None  # xgboost not installed
+        return None, None
     
     pipe = Pipeline([("prep", prep),
                      ("model", XGBRegressor(
@@ -52,7 +53,7 @@ def make_xgb_optimized(prep, random_state=42, search_mode="full"):
                      ))])
     
     if search_mode == "fast":
-        # Reduced grid for faster iteration
+        # quick grid for testing
         grid = {
             "model__n_estimators": [300],
             "model__max_depth": [6],
@@ -63,7 +64,7 @@ def make_xgb_optimized(prep, random_state=42, search_mode="full"):
             "model__gamma": [0.1],
         }
     else:
-        # Full expanded grid for comprehensive search
+        # full grid - takes a while
         grid = {
             "model__n_estimators": [100, 300, 500],
             "model__max_depth": [3, 6, 9],

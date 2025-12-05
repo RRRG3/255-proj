@@ -1,4 +1,4 @@
-"""Outlier detection and handling utilities."""
+"""Outlier detection and removal"""
 import pandas as pd
 import numpy as np
 from typing import List
@@ -7,11 +7,10 @@ from typing import List
 def detect_outliers(df: pd.DataFrame, 
                    columns: List[str], 
                    n_std: float = 3.0) -> pd.Series:
-    """Detect outliers using standard deviation method."""
+    """Find outliers using std deviation method"""
     if n_std <= 0:
         raise ValueError(f"n_std must be positive, got {n_std}")
     
-    # Initialize mask with all False
     outlier_mask = pd.Series(False, index=df.index)
     
     for col in columns:
@@ -22,7 +21,7 @@ def detect_outliers(df: pd.DataFrame,
         mean = values.mean()
         std = values.std()
         
-        # Mark as outlier if beyond n_std standard deviations
+        # flag anything beyond n_std standard deviations
         lower_bound = mean - n_std * std
         upper_bound = mean + n_std * std
         
@@ -33,14 +32,12 @@ def detect_outliers(df: pd.DataFrame,
 
 
 def remove_outliers(df: pd.DataFrame, outlier_mask: pd.Series) -> pd.DataFrame:
-    """
-    Remove outlier rows from dataframe."""
+    """Drop outlier rows"""
     n_outliers = outlier_mask.sum()
     
     if n_outliers == len(df):
         raise ValueError(
-            "All rows are identified as outliers. "
-            "Consider adjusting the threshold or checking your data."
+            "All rows are outliers! Check your threshold."
         )
     
     return df[~outlier_mask].copy()
@@ -49,7 +46,7 @@ def remove_outliers(df: pd.DataFrame, outlier_mask: pd.Series) -> pd.DataFrame:
 def cap_outliers(df: pd.DataFrame, 
                 columns: List[str], 
                 n_std: float = 3.0) -> pd.DataFrame:
-    """Cap outliers at threshold values instead of removing them."""
+    """Cap outliers instead of removing them"""
     if n_std <= 0:
         raise ValueError(f"n_std must be positive, got {n_std}")
     
@@ -66,7 +63,7 @@ def cap_outliers(df: pd.DataFrame,
         lower_bound = mean - n_std * std
         upper_bound = mean + n_std * std
         
-        # Cap values at bounds
+        # clip to bounds
         out[col] = values.clip(lower=lower_bound, upper=upper_bound)
     
     return out

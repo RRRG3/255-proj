@@ -1,4 +1,4 @@
-"""XGBoost optimization experiment runner."""
+"""XGBoost optimization experiments."""
 import argparse
 import json
 from pathlib import Path
@@ -19,28 +19,28 @@ from houseprice.transforms import TargetTransformer
 
 
 def rmse(y_true, y_pred):
-    """Calculate RMSE."""
+    """RMSE calc."""
     return root_mean_squared_error(y_true, y_pred)
 
 
 def run_baseline_experiment(X_train, y_train, X_test, y_test, kf, random_state):
-    """Run baseline experiment with current approach."""
+    """Baseline experiment."""
     print("\n" + "="*60)
-    print("BASELINE EXPERIMENT")
+    print("BASELINE")
     print("="*60)
     
-    # Use log1p transformation (current approach)
+    # log transform
     y_train_log = np.log1p(y_train)
     y_test_log = np.log1p(y_test)
     
-    # Preprocessors
+    # prep
     num, cat = split_columns(X_train)
     _, prep_trees = make_preprocessors(num, cat)
     
-    # Original XGBoost model
+    # xgboost model
     xgb_pipe, xgb_grid = make_xgb(prep_trees, random_state)
     
-    # Grid search
+    # grid search
     gs = GridSearchCV(xgb_pipe, param_grid=xgb_grid, cv=kf, scoring="r2", n_jobs=-1)
     gs.fit(X_train, y_train_log)
     best = gs.best_estimator_
@@ -72,9 +72,9 @@ def run_baseline_experiment(X_train, y_train, X_test, y_test, kf, random_state):
 
 
 def run_hyperparams_experiment(X_train, y_train, X_test, y_test, kf, random_state, search_mode="fast"):
-    """Run experiment with expanded hyperparameters."""
+    """Hyperparameter tuning experiment."""
     print("\n" + "="*60)
-    print(f"HYPERPARAMETERS EXPERIMENT (mode={search_mode})")
+    print(f"HYPERPARAMS ({search_mode} mode)")
     print("="*60)
     
     y_train_log = np.log1p(y_train)
@@ -118,18 +118,18 @@ def run_hyperparams_experiment(X_train, y_train, X_test, y_test, kf, random_stat
 
 
 def run_features_experiment(X_train_raw, y_train, X_test_raw, y_test, kf, random_state):
-    """Run experiment with advanced features."""
+    """Advanced features experiment."""
     print("\n" + "="*60)
-    print("ADVANCED FEATURES EXPERIMENT")
+    print("ADVANCED FEATURES")
     print("="*60)
     
-    # Apply advanced feature engineering
-    # Compute zipcode stats from training data only
+    # advanced feature engineering
+    # compute zipcode stats from train only
     df_train_with_price = X_train_raw.copy()
     df_train_with_price["price"] = y_train
     X_train_adv = engineer_advanced_features(df_train_with_price, include_location_stats=True)
     
-    # Extract zipcode stats for test set
+    # extract zipcode stats for test
     if "zipcode_median_price" in X_train_adv.columns:
         zipcode_stats = {
             "median": X_train_adv.groupby("zipcode")["zipcode_median_price"].first().to_dict(),
@@ -186,18 +186,18 @@ def run_features_experiment(X_train_raw, y_train, X_test_raw, y_test, kf, random
 
 
 def run_outliers_experiment(X_train_raw, y_train, X_test, y_test, kf, random_state):
-    """Run experiment with outlier removal."""
+    """Outlier removal experiment."""
     print("\n" + "="*60)
-    print("OUTLIER REMOVAL EXPERIMENT")
+    print("OUTLIER REMOVAL")
     print("="*60)
     
-    # Detect and remove outliers from training set
+    # detect and remove outliers from train
     df_train = X_train_raw.copy()
     df_train["price"] = y_train
     
     outlier_mask = detect_outliers(df_train, columns=["price", "sqft_living"], n_std=3.0)
     n_outliers = outlier_mask.sum()
-    print(f"Outliers detected: {n_outliers} ({100*n_outliers/len(df_train):.1f}%)")
+    print(f"Outliers found: {n_outliers} ({100*n_outliers/len(df_train):.1f}%)")
     
     df_train_clean = remove_outliers(df_train, outlier_mask)
     X_train_clean = df_train_clean.drop(columns=["price"])
@@ -242,21 +242,21 @@ def run_outliers_experiment(X_train_raw, y_train, X_test, y_test, kf, random_sta
 
 
 def run_combined_experiment(X_train_raw, y_train, X_test_raw, y_test, kf, random_state, search_mode="fast"):
-    """Run experiment with all optimizations combined."""
+    """Combined optimizations experiment."""
     print("\n" + "="*60)
-    print(f"COMBINED OPTIMIZATIONS EXPERIMENT (mode={search_mode})")
+    print(f"COMBINED ({search_mode} mode)")
     print("="*60)
     
-    # 1. Remove outliers
+    # 1. remove outliers
     df_train = X_train_raw.copy()
     df_train["price"] = y_train
     outlier_mask = detect_outliers(df_train, columns=["price", "sqft_living"], n_std=3.0)
     df_train_clean = remove_outliers(df_train, outlier_mask)
     X_train_clean = df_train_clean.drop(columns=["price"])
     y_train_clean = df_train_clean["price"].values
-    print(f"Outliers removed: {outlier_mask.sum()}")
+    print(f"Removed {outlier_mask.sum()} outliers")
     
-    # 2. Advanced features
+    # 2. advanced features
     df_train_fe = X_train_clean.copy()
     df_train_fe["price"] = y_train_clean
     X_train_adv = engineer_advanced_features(df_train_fe, include_location_stats=True)
@@ -321,20 +321,20 @@ def run_combined_experiment(X_train_raw, y_train, X_test_raw, y_test, kf, random
 
 
 def main(data_path: Path, out_dir: Path, strategies: list, search_mode: str = "fast"):
-    """Run optimization experiments."""
+    """Run experiments."""
     out_dir.mkdir(parents=True, exist_ok=True)
     
-    # Load data
-    print("Loading data...")
+    # load data
+    print("Loading...")
     df = clean_data(load_data(data_path))
     
-    # Basic feature engineering for baseline
+    # basic feature engineering
     df_fe = engineer_features(df)
     
-    # Save the engineered features for notebook use
+    # save for notebook
     xgb_features_path = data_path.parent / "kc_house_data_xgboost_features.csv"
     df_fe.to_csv(xgb_features_path, index=False)
-    print(f"Saved XGBoost features to {xgb_features_path}")
+    print(f"Saved features to {xgb_features_path}")
     
     y = df_fe["price"].values
     X = df_fe.drop(columns=["price"])
@@ -380,20 +380,20 @@ def main(data_path: Path, out_dir: Path, strategies: list, search_mode: str = "f
     results_df.to_csv(results_path, index=False)
     print(f"\nResults saved to {results_path}")
     
-    # Print comparison table
+    # comparison table
     print("\n" + "="*80)
-    print("OPTIMIZATION RESULTS COMPARISON")
+    print("RESULTS COMPARISON")
     print("="*80)
     print(results_df[["strategy", "r2_cv", "rmse_cv", "r2_test", "rmse_test"]].to_string(index=False))
     
-    # Calculate improvements over baseline
+    # improvements vs baseline
     if "baseline" in strategies:
         baseline_rmse = results_df[results_df["strategy"] == "baseline"]["rmse_test"].values[0]
         results_df["improvement_pct"] = (
             (baseline_rmse - results_df["rmse_test"]) / baseline_rmse * 100
         )
         print("\n" + "="*80)
-        print("IMPROVEMENT OVER BASELINE")
+        print("IMPROVEMENT VS BASELINE")
         print("="*80)
         print(results_df[["strategy", "rmse_test", "improvement_pct"]].to_string(index=False))
     
